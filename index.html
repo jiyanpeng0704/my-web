@@ -1,0 +1,506 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>碧蓝海岸 · Azure Coast Travel</title>
+<meta name="description" content="碧蓝海岸 — 探索世界最美的海岸线，发现属于你的旅行故事。Azure Coast Travel — Discover the world's most beautiful coastlines.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="site-header" id="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <span class="logo-icon">~</span>
+      <span data-i18n="brand">碧蓝海岸</span>
+    </a>
+    <nav class="main-nav" id="mainNav">
+      <a href="#destinations" data-i18n="nav_dest">目的地</a>
+      <a href="#tours" data-i18n="nav_tours">行程</a>
+      <a href="#experiences" data-i18n="nav_exp">体验</a>
+      <a href="#accommodations" data-i18n="nav_hotels">住宿</a>
+      <a href="#guide" data-i18n="nav_guide">攻略</a>
+      <a href="#gallery" data-i18n="nav_gallery">图集</a>
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">
+        <span class="lang-option active" data-lang="zh">中</span>
+        <span class="lang-divider">/</span>
+        <span class="lang-option" data-lang="en">EN</span>
+      </button>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <picture>
+      <source srcset="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80" media="(min-width: 1200px)">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80" alt="Coastal paradise">
+    </picture>
+  </div>
+  <div class="hero-content">
+    <p class="hero-suptitle" data-i18n="hero_suptitle">探索世界的海岸线</p>
+    <h1 class="hero-title" data-i18n="hero_title">让每一次旅行<br>都成为<em>永恒</em></h1>
+    <p class="hero-subtitle" data-i18n="hero_subtitle">从碧蓝的海水到金色的沙滩，从隐秘的港湾到壮丽的悬崖——我们带你发现地球上最美的海岸</p>
+    <div class="hero-actions">
+      <a href="#tours" class="btn btn-primary" data-i18n="hero_btn_tours">探索行程</a>
+      <a href="#destinations" class="btn btn-outline" data-i18n="hero_btn_dest">热门目的地</a>
+    </div>
+    <div class="hero-search">
+      <div class="search-bar">
+        <select data-i18n-options="search_dest_options" aria-label="Destination">
+          <option value="" data-i18n="search_placeholder_dest">选择目的地</option>
+          <option value="sanya">三亚</option>
+          <option value="bali">巴厘岛</option>
+          <option value="santorini">圣托里尼</option>
+          <option value="maldives">马尔代夫</option>
+          <option value="phuket">普吉岛</option>
+        </select>
+        <input type="text" placeholder="输入日期或关键词" data-i18n-placeholder="search_placeholder_date" aria-label="Search">
+        <button class="search-btn" data-i18n="search_btn">搜索</button>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span data-i18n="scroll">向下探索</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+<!-- ========== DESTINATIONS ========== -->
+<section class="section destinations" id="destinations">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label" data-i18n="label_dest">热门目的地</div>
+      <h2 class="section-title" data-i18n="dest_title">精选旅行目的地</h2>
+      <p class="section-desc" data-i18n="dest_desc">从热带天堂到地中海明珠，每一处都是值得造访的绝美海岸</p>
+    </div>
+    <div class="destinations-grid">
+      <div class="dest-card reveal">
+        <div class="dest-card-image">
+          <img src="https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800&q=80" alt="Sanya" loading="lazy">
+          <div class="dest-card-overlay"></div>
+          <span class="dest-card-badge" data-i18n="badge_hot">热门</span>
+          <div class="dest-card-info">
+            <h3 class="dest-card-name">三亚 · Sanya</h3>
+            <span class="dest-card-location">📍 中国海南</span>
+          </div>
+        </div>
+        <div class="dest-card-body">
+          <p class="dest-card-desc" data-i18n="dest_sanya_desc">中国最美的热带海滨城市，拥有洁白细腻的沙滩和清澈温暖的海水。亚龙湾、海棠湾等顶级海湾等你探索。</p>
+          <div class="dest-card-tags">
+            <span class="dest-tag" data-i18n="tag_beach">海滩</span>
+            <span class="dest-tag" data-i18n="tag_diving">潜水</span>
+            <span class="dest-tag" data-i18n="tag_resort">度假村</span>
+          </div>
+        </div>
+      </div>
+      <div class="dest-card reveal reveal-delay-1">
+        <div class="dest-card-image">
+          <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" alt="Bali" loading="lazy">
+          <div class="dest-card-overlay"></div>
+          <div class="dest-card-info">
+            <h3 class="dest-card-name">巴厘岛 · Bali</h3>
+            <span class="dest-card-location">📍 印度尼西亚</span>
+          </div>
+        </div>
+        <div class="dest-card-body">
+          <p class="dest-card-desc" data-i18n="dest_bali_desc">众神之岛，融合了绝美的海滩、梯田与文化遗迹。乌布的艺术气息和库塔的冲浪文化同样迷人。</p>
+          <div class="dest-card-tags">
+            <span class="dest-tag" data-i18n="tag_culture">文化</span>
+            <span class="dest-tag" data-i18n="tag_surfing">冲浪</span>
+            <span class="dest-tag" data-i18n="tag_yoga">瑜伽</span>
+          </div>
+        </div>
+      </div>
+      <div class="dest-card reveal reveal-delay-2">
+        <div class="dest-card-image">
+          <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80" alt="Santorini" loading="lazy">
+          <div class="dest-card-overlay"></div>
+          <div class="dest-card-info">
+            <h3 class="dest-card-name">圣托里尼 · Santorini</h3>
+            <span class="dest-card-location">📍 希腊</span>
+          </div>
+        </div>
+        <div class="dest-card-body">
+          <p class="dest-card-desc" data-i18n="dest_santorini_desc">蓝白相间的梦幻岛屿，爱琴海上最璀璨的明珠。标志性的蓝顶教堂和壮丽的火山口日落令人陶醉。</p>
+          <div class="dest-card-tags">
+            <span class="dest-tag" data-i18n="tag_sunset">日落</span>
+            <span class="dest-tag" data-i18n="tag_romantic">浪漫</span>
+            <span class="dest-tag" data-i18n="tag_wine">美酒</span>
+          </div>
+        </div>
+      </div>
+      <div class="dest-card reveal">
+        <div class="dest-card-image">
+          <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80" alt="Maldives" loading="lazy">
+          <div class="dest-card-overlay"></div>
+          <span class="dest-card-badge" data-i18n="badge_luxury">奢华</span>
+          <div class="dest-card-info">
+            <h3 class="dest-card-name">马尔代夫 · Maldives</h3>
+            <span class="dest-card-location">📍 马尔代夫</span>
+          </div>
+        </div>
+        <div class="dest-card-body">
+          <p class="dest-card-desc" data-i18n="dest_maldives_desc">印度洋上的人间天堂，环礁环绕的碧蓝泻湖与奢华水上别墅。全球顶级潜水胜地，与鲸鲨同游的终极梦想。</p>
+          <div class="dest-card-tags">
+            <span class="dest-tag" data-i18n="tag_overwater">水上屋</span>
+            <span class="dest-tag" data-i18n="tag_snorkeling">浮潜</span>
+            <span class="dest-tag" data-i18n="tag_spa">水疗</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ========== FEATURED TOURS ========== -->
+<section class="section featured-tours" id="tours">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label" data-i18n="label_tours">精选行程</div>
+      <h2 class="section-title" data-i18n="tours_title">策划你的完美假期</h2>
+      <p class="section-desc" data-i18n="tours_desc">由资深旅行设计师精心打造的行程方案，让每一段旅程都成为难忘的回忆</p>
+    </div>
+    <div class="tours-grid">
+      <div class="tour-card reveal">
+        <div class="tour-card-image">
+          <img src="https://images.unsplash.com/photo-1502851211256-709401b51ea7?w=600&q=80" alt="Maldives tour" loading="lazy">
+          <div class="tour-card-price">¥<span>12,800</span>/人</div>
+          <div class="tour-card-duration">📅 7天5晚</div>
+        </div>
+        <div class="tour-card-body">
+          <div class="tour-card-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">4.9 (328)</span>
+          </div>
+          <h3 class="tour-card-title" data-i18n="tour_01_title">马尔代夫 · 梦幻环礁之旅</h3>
+          <p class="tour-card-desc" data-i18n="tour_01_desc">入住顶级水上别墅，与海龟和蝠鲼共游，在私人沙滩上享受烛光晚餐。</p>
+          <div class="tour-inclusions">
+            <span>✈️ 含机票</span>
+            <span>🏨 含住宿</span>
+            <span>🍽️ 含餐饮</span>
+          </div>
+          <div class="tour-card-footer">
+            <span class="tour-card-rating" style="margin:0">⭐ 超值推荐</span>
+            <a href="#" class="btn btn-primary" data-i18n="btn_detail">查看详情</a>
+          </div>
+        </div>
+      </div>
+      <div class="tour-card reveal reveal-delay-1">
+        <div class="tour-card-image">
+          <img src="https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=600&q=80" alt="Santorini tour" loading="lazy">
+          <div class="tour-card-price">¥<span>9,600</span>/人</div>
+          <div class="tour-card-duration">📅 8天6晚</div>
+        </div>
+        <div class="tour-card-body">
+          <div class="tour-card-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">4.8 (256)</span>
+          </div>
+          <h3 class="tour-card-title" data-i18n="tour_02_title">希腊 · 爱琴海浪漫之旅</h3>
+          <p class="tour-card-desc" data-i18n="tour_02_desc">漫步蓝白小镇，在伊亚欣赏世界最美日落，品味地道的希腊美食与美酒。</p>
+          <div class="tour-inclusions">
+            <span>✈️ 含机票</span>
+            <span>🏨 含住宿</span>
+            <span>🚢 含邮轮</span>
+          </div>
+          <div class="tour-card-footer">
+            <span class="tour-card-rating" style="margin:0">💑 蜜月首选</span>
+            <a href="#" class="btn btn-primary" data-i18n="btn_detail">查看详情</a>
+          </div>
+        </div>
+      </div>
+      <div class="tour-card reveal reveal-delay-2">
+        <div class="tour-card-image">
+          <img src="https://images.unsplash.com/photo-1519046904884-53103b34b1b5?w=600&q=80" alt="Bali tour" loading="lazy">
+          <div class="tour-card-price">¥<span>6,800</span>/人</div>
+          <div class="tour-card-duration">📅 6天5晚</div>
+        </div>
+        <div class="tour-card-body">
+          <div class="tour-card-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">4.7 (412)</span>
+          </div>
+          <h3 class="tour-card-title" data-i18n="tour_03_title">巴厘岛 · 灵性与冲浪之旅</h3>
+          <p class="tour-card-desc" data-i18n="tour_03_desc">探访乌布稻田与神庙，体验冲浪课程和传统SPA，感受巴厘岛的文化与自然。</p>
+          <div class="tour-inclusions">
+            <span>✈️ 含机票</span>
+            <span>🏨 含住宿</span>
+            <span>🏄 含冲浪课</span>
+          </div>
+          <div class="tour-card-footer">
+            <span class="tour-card-rating" style="margin:0">🔥 人气爆款</span>
+            <a href="#" class="btn btn-primary" data-i18n="btn_detail">查看详情</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ========== EXPERIENCES ========== -->
+<section class="section experiences" id="experiences">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label" data-i18n="label_exp">特色体验</div>
+      <h2 class="section-title" data-i18n="exp_title">超越旅行的体验</h2>
+      <p class="section-desc" data-i18n="exp_desc">不只是观光，让每一次旅行都成为独特的生命体验</p>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <span class="exp-icon">🤿</span>
+        <h3 data-i18n="exp_01_title">深海潜水</h3>
+        <p data-i18n="exp_01_desc">探索五彩斑斓的珊瑚礁，与海龟、蝠鲼和鲸鲨共游，感受海洋的壮丽与神秘。</p>
+      </div>
+      <div class="exp-card reveal reveal-delay-1">
+        <span class="exp-icon">🏄</span>
+        <h3 data-i18n="exp_02_title">冲浪体验</h3>
+        <p data-i18n="exp_02_desc">从初学者到进阶者，在世界级浪点跟随专业教练学习，征服海浪的快感无与伦比。</p>
+      </div>
+      <div class="exp-card reveal reveal-delay-2">
+        <span class="exp-icon">🧘</span>
+        <h3 data-i18n="exp_03_title">海滨瑜伽</h3>
+        <p data-i18n="exp_03_desc">在日出时分的海滩上，伴随海浪声进行身心合一的瑜伽冥想，找回内心的平静。</p>
+      </div>
+      <div class="exp-card reveal reveal-delay-3">
+        <span class="exp-icon">🍷</span>
+        <h3 data-i18n="exp_04_title">美酒品鉴</h3>
+        <p data-i18n="exp_04_desc">在悬崖顶端的酒庄品尝当地佳酿，欣赏壮阔海景，让味蕾与视觉同享盛宴。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ACCOMMODATIONS ========== -->
+<section class="section accommodations" id="accommodations">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label" data-i18n="label_hotels">精选住宿</div>
+      <h2 class="section-title" data-i18n="hotels_title">每一晚都是享受</h2>
+      <p class="section-desc" data-i18n="hotels_desc">从奢华度假村到精品民宿，为你甄选最优质的滨海住宿</p>
+    </div>
+    <div class="accomm-grid">
+      <div class="accomm-card reveal">
+        <div class="accomm-image">
+          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80" alt="Luxury resort" loading="lazy">
+        </div>
+        <div class="accomm-body">
+          <span class="accomm-type" data-i18n="type_luxury">奢华度假村</span>
+          <h3 class="accomm-name" data-i18n="hotel_01_name">碧海蓝天度假村</h3>
+          <span class="accomm-location" data-i18n="hotel_01_loc">📍 三亚 · 亚龙湾</span>
+          <p class="accomm-desc" data-i18n="hotel_01_desc">坐拥私人海滩，每间客房都面朝大海。无边际泳池与热带花园相映成趣，提供世界级的水疗体验。</p>
+          <div class="accomm-amenities">
+            <span class="amenity">🏊 无边际泳池</span>
+            <span class="amenity">💆 SPA</span>
+            <span class="amenity">🍽️ 海景餐厅</span>
+            <span class="amenity">🏋️ 健身中心</span>
+          </div>
+          <div class="accomm-footer">
+            <span class="accomm-price">¥1,880 <small>/晚起</small></span>
+            <a href="#" class="btn btn-outline-dark" data-i18n="btn_book">预订</a>
+          </div>
+        </div>
+      </div>
+      <div class="accomm-card reveal reveal-delay-1">
+        <div class="accomm-image">
+          <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80" alt="Overwater villa" loading="lazy">
+        </div>
+        <div class="accomm-body">
+          <span class="accomm-type" data-i18n="type_overwater">水上别墅</span>
+          <h3 class="accomm-name" data-i18n="hotel_02_name">珊瑚海水上别墅</h3>
+          <span class="accomm-location" data-i18n="hotel_02_loc">📍 马尔代夫 · 南环礁</span>
+          <p class="accomm-desc" data-i18n="hotel_02_desc">建在碧蓝泻湖之上的奢华别墅，透明玻璃地板可观赏海底世界。私人甲板直通大海，感受被海洋包围的奇妙。</p>
+          <div class="accomm-amenities">
+            <span class="amenity">🪟 玻璃地板</span>
+            <span class="amenity">🛥️ 私人游艇</span>
+            <span class="amenity">🍸 水上酒吧</span>
+            <span class="amenity">🤿 浮潜装备</span>
+          </div>
+          <div class="accomm-footer">
+            <span class="accomm-price">¥3,280 <small>/晚起</small></span>
+            <a href="#" class="btn btn-outline-dark" data-i18n="btn_book">预订</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ========== TRAVEL GUIDE ========== -->
+<section class="section travel-guide" id="guide">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label" data-i18n="label_guide">旅行攻略</div>
+      <h2 class="section-title" data-i18n="guide_title">出行前必读</h2>
+      <p class="section-desc" data-i18n="guide_desc">实用的旅行贴士让您的海岸之旅更加轻松愉快</p>
+    </div>
+    <div class="guide-grid">
+      <div class="guide-card reveal">
+        <div class="guide-num">01</div>
+        <h3 data-i18n="guide_01_title">最佳出行时间</h3>
+        <p data-i18n="guide_01_desc">不同海岸目的地的气候各异。热带地区11月至次年4月为旱季，地中海沿岸5月至9月阳光充沛。合理规划时间避开台风和雨季，才能享受完美假期。</p>
+      </div>
+      <div class="guide-card reveal reveal-delay-1">
+        <div class="guide-num">02</div>
+        <h3 data-i18n="guide_02_title">出行准备清单</h3>
+        <p data-i18n="guide_02_desc">防晒用品、泳装、防水袋、浮潜装备、轻便衣物、急救药品、旅行保险缺一不可。别忘了检查护照有效期和签证要求，提前兑换当地货币。</p>
+      </div>
+      <div class="guide-card reveal reveal-delay-2">
+        <div class="guide-num">03</div>
+        <h3 data-i18n="guide_03_title">当地美食推荐</h3>
+        <p data-i18n="guide_03_desc">在海岛旅行不可错过新鲜捕捞的海鲜盛宴。从泰国的冬阴功到希腊的海鲜拼盘，从巴厘岛的脏鸭餐到海南的文昌鸡，让味蕾随风景一起旅行。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section class="section testimonials" id="testimonials">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label" data-i18n="label_reviews">旅友评价</div>
+      <h2 class="section-title" data-i18n="reviews_title">听听他们的故事</h2>
+      <p class="section-desc" data-i18n="reviews_desc">来自真实旅行者的心声，分享碧蓝海岸带来的美好回忆</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text" data-i18n="review_01_text">"马尔代夫的水上别墅简直像是做梦一样！早上醒来就能透过玻璃地板看到鱼群游过。碧蓝海岸的行程安排非常周到，从接机到送机全程无忧，强烈推荐！"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Zhang Wei" loading="lazy">
+          </div>
+          <div>
+            <div class="testimonial-name">张薇</div>
+            <div class="testimonial-role" data-i18n="review_01_role">蜜月旅行者 · 上海</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-1">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text" data-i18n="review_02_text">"圣托里尼的日落真的太震撼了！碧蓝海岸安排的私人摄影师帮我们拍了很多照片，每一张都像明信片一样。伊亚小镇的蓝顶教堂和悬崖餐厅让人终身难忘。"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Li Ming" loading="lazy">
+          </div>
+          <div>
+            <div class="testimonial-name">李明 & 小雨</div>
+            <div class="testimonial-role" data-i18n="review_02_role">蜜月旅行者 · 北京</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-2">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text" data-i18n="review_03_text">"在巴厘岛学冲浪是我做过最酷的事！教练非常耐心，第三天就能站在浪板上了。乌布的稻田徒步和猴子森林也超好玩，这是一次充满冒险与放松的完美假期。"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt="Chen Hao" loading="lazy">
+          </div>
+          <div>
+            <div class="testimonial-name">陈浩</div>
+            <div class="testimonial-role" data-i18n="review_03_role">自由旅行者 · 广州</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ========== GALLERY ========== -->
+<section class="section gallery" id="gallery">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label" data-i18n="label_gallery">精彩图集</div>
+      <h2 class="section-title" data-i18n="gallery_title">海岸掠影</h2>
+      <p class="section-desc" data-i18n="gallery_desc">用镜头记录这个世界最美丽的角落，每一帧都是壁纸级别</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=800&q=80" alt="Tropical beach" loading="lazy">
+        <div class="gallery-item-overlay"><span data-i18n="gallery_01">热带海滩</span></div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1502780401007-492f44d5cf87?w=400&q=80" alt="Sunset coast" loading="lazy">
+        <div class="gallery-item-overlay"><span data-i18n="gallery_02">海岸日落</span></div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=400&q=80" alt="Coral reef" loading="lazy">
+        <div class="gallery-item-overlay"><span data-i18n="gallery_03">珊瑚秘境</span></div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1502780401007-492f44d5cf87?w=400&q=80" alt="Ocean view" loading="lazy">
+        <div class="gallery-item-overlay"><span data-i18n="gallery_04">蔚蓝海岸</span></div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=800&q=80" alt="Beach paradise" loading="lazy">
+        <div class="gallery-item-overlay"><span data-i18n="gallery_05">天堂沙滩</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="newsletter" id="newsletter">
+  <div class="container">
+    <div class="newsletter-content reveal">
+      <h2 data-i18n="newsletter_title">开启你的海岸之旅</h2>
+      <p data-i18n="newsletter_desc">订阅我们的旅行通讯，获取最新目的地推荐、独家优惠和旅行灵感。每月精选，直抵你的邮箱。</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault();alert(document.documentElement.lang==='zh'?'已订阅，感谢关注！':'Subscribed! Thank you!');">
+        <input type="email" placeholder="输入你的邮箱地址" data-i18n-placeholder="newsletter_placeholder" required>
+        <button type="submit" class="btn btn-primary" data-i18n="newsletter_btn">立即订阅</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <span class="logo-icon">~</span>
+          <span data-i18n="brand">碧蓝海岸</span>
+        </a>
+        <p class="footer-tagline" data-i18n="footer_tagline">探索世界最美的海岸线，创造属于你的旅行故事。</p>
+        <div class="footer-social">
+          <a href="#" aria-label="WeChat">💬</a>
+          <a href="#" aria-label="Weibo">📱</a>
+          <a href="#" aria-label="Instagram">📷</a>
+          <a href="#" aria-label="Xiaohongshu">📕</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5 data-i18n="footer_explore">探索</h5>
+        <a href="#destinations" data-i18n="nav_dest">目的地</a>
+        <a href="#tours" data-i18n="nav_tours">精选行程</a>
+        <a href="#experiences" data-i18n="nav_exp">特色体验</a>
+        <a href="#gallery" data-i18n="nav_gallery">精彩图集</a>
+      </div>
+      <div class="footer-col">
+        <h5 data-i18n="footer_service">服务</h5>
+        <a href="#" data-i18n="footer_about">关于我们</a>
+        <a href="#" data-i18n="footer_contact">联系我们</a>
+        <a href="#" data-i18n="footer_faq">常见问题</a>
+        <a href="#" data-i18n="footer_privacy">隐私政策</a>
+      </div>
+      <div class="footer-col">
+        <h5 data-i18n="footer_contact_title">联系方式</h5>
+        <a href="mailto:hello@azurecoast.com">hello@azurecoast.com</a>
+        <a href="tel:+862140001234">+86 21 4000 1234</a>
+        <a href="#" data-i18n="footer_address">上海市黄浦区南京东路100号</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-i18n="footer_copyright">© 2026 碧蓝海岸 Azure Coast Travel. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
