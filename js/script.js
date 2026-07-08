@@ -1,6 +1,6 @@
 ﻿/* ============================================
    碧蓝海岸 · Azure Coast Travel
-   Bilingual support, scroll animations
+   Bilingual support, scroll animations, data sync
    ============================================ */
 (function() {
   'use strict';
@@ -182,6 +182,7 @@
       footer_copyright: '© 2026 Azure Coast Travel. All rights reserved.',
     }
   };
+
   // ============================================
   // DOM refs
   // ============================================
@@ -190,6 +191,246 @@
   const menuToggle = document.getElementById('menuToggle');
   const mainNav = document.getElementById('mainNav');
   let currentLang = 'zh';
+
+  // ============================================
+  // DATA LAYER — 从 localStorage 读取业务数据
+  // ============================================
+  const DB_KEY = 'azurecoast_admin_data';
+
+  function getDefaultData() {
+    return {
+      destinations: [
+        { id: 'd1', name: '三亚 · Sanya', location: '中国海南', description: '中国最美的热带海滨城市，拥有洁白细腻的沙滩和清澈温暖的海水。亚龙湾、海棠湾等顶级海湾等你探索。', image: 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800&q=80', tags: ['海滩', '潜水', '度假村'], badge: '热门' },
+        { id: 'd2', name: '巴厘岛 · Bali', location: '印度尼西亚', description: '众神之岛，融合了绝美的海滩、梯田与文化遗迹。乌布的艺术气息和库塔的冲浪文化同样迷人。', image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80', tags: ['文化', '冲浪', '瑜伽'], badge: '' },
+        { id: 'd3', name: '圣托里尼 · Santorini', location: '希腊', description: '蓝白相间的梦幻岛屿，爱琴海上最璀璨的明珠。标志性的蓝顶教堂和壮丽的火山口日落令人陶醉。', image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80', tags: ['日落', '浪漫', '美酒'], badge: '' },
+        { id: 'd4', name: '马尔代夫 · Maldives', location: '马尔代夫', description: '印度洋上的人间天堂，环礁环绕的碧蓝泻湖与奢华水上别墅。全球顶级潜水胜地，与鲸鲨同游的终极梦想。', image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80', tags: ['水上屋', '浮潜', '水疗'], badge: '奢华' }
+      ],
+      tours: [
+        { id: 't1', title: '马尔代夫 · 梦幻环礁之旅', description: '入住顶级水上别墅，与海龟和蝠鲼共游，在私人沙滩上享受烛光晚餐。', price: 12800, duration: '7天5晚', rating: 4.9, reviews: 328, inclusions: ['含机票', '含住宿', '含餐饮'], image: 'https://images.unsplash.com/photo-1502851211256-709401b51ea7?w=600&q=80', badge: '超值推荐' },
+        { id: 't2', title: '希腊 · 爱琴海浪漫之旅', description: '漫步蓝白小镇，在伊亚欣赏世界最美日落，品味地道的希腊美食与美酒。', price: 9600, duration: '8天6晚', rating: 4.8, reviews: 256, inclusions: ['含机票', '含住宿', '含邮轮'], image: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=600&q=80', badge: '蜜月首选' },
+        { id: 't3', title: '巴厘岛 · 灵性与冲浪之旅', description: '探访乌布稻田与神庙，体验冲浪课程和传统SPA，感受巴厘岛的文化与自然。', price: 6800, duration: '6天5晚', rating: 4.7, reviews: 412, inclusions: ['含机票', '含住宿', '含冲浪课'], image: 'https://images.unsplash.com/photo-1519046904884-53103b34b1b5?w=600&q=80', badge: '人气爆款' }
+      ],
+      accommodations: [
+        { id: 'a1', name: '碧海蓝天度假村', location: '三亚 · 亚龙湾', description: '坐拥私人海滩，每间客房都面朝大海。无边际泳池与热带花园相映成趣，提供世界级的水疗体验。', type: '奢华度假村', price: 1880, amenities: ['无边际泳池', 'SPA', '海景餐厅', '健身中心'], image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80' },
+        { id: 'a2', name: '珊瑚海水上别墅', location: '马尔代夫 · 南环礁', description: '建在碧蓝泻湖之上的奢华别墅，透明玻璃地板可观赏海底世界。私人甲板直通大海，感受被海洋包围的奇妙。', type: '水上别墅', price: 3280, amenities: ['玻璃地板', '私人游艇', '水上酒吧', '浮潜装备'], image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80' }
+      ],
+      gallery: [
+        { id: 'g1', title: '热带海滩', image: 'https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=800&q=80', category: '海滩' },
+        { id: 'g2', title: '海岸日落', image: 'https://images.unsplash.com/photo-1502780401007-492f44d5cf87?w=400&q=80', category: '日落' },
+        { id: 'g3', title: '珊瑚秘境', image: 'https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=400&q=80', category: '海底' },
+        { id: 'g4', title: '蔚蓝海岸', image: 'https://images.unsplash.com/photo-1502780401007-492f44d5cf87?w=400&q=80', category: '海岸' },
+        { id: 'g5', title: '天堂沙滩', image: 'https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=800&q=80', category: '沙滩' }
+      ]
+    };
+  }
+
+  function loadBusinessData() {
+    try {
+      const raw = localStorage.getItem(DB_KEY);
+      if (raw) {
+        const data = JSON.parse(raw);
+        const def = getDefaultData();
+        // 补全缺失的集合
+        for (let key in def) {
+          if (!data[key] || !Array.isArray(data[key])) data[key] = def[key];
+        }
+        return data;
+      }
+    } catch (e) { /* ignore */ }
+    return getDefaultData();
+  }
+
+  // ============================================
+  // RENDER ENGINES — 动态渲染各模块
+  // ============================================
+
+  // 渲染目的地
+  function renderDestinations(data) {
+    const container = document.getElementById('destinationsGrid');
+    if (!container) return;
+    const items = data.destinations || [];
+    if (items.length === 0) {
+      container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:60px 0;color:var(--color-text-muted);text-align:center;">暂无目的地数据</div>`;
+      return;
+    }
+    let html = '';
+    items.forEach((d, idx) => {
+      const delay = idx % 3 === 0 ? '' : (idx % 3 === 1 ? ' reveal-delay-1' : ' reveal-delay-2');
+      const badgeHtml = d.badge ? `<span class="dest-card-badge">${d.badge}</span>` : '';
+      const tagsHtml = (d.tags || []).map(t => `<span class="dest-tag">${t}</span>`).join('');
+      const gridSpan = idx === 0 || idx === 3 ? ' style="grid-column:span 2;"' : '';
+      html += `
+        <div class="dest-card reveal${delay}"${gridSpan}>
+          <div class="dest-card-image">
+            <img src="${d.image || ''}" alt="${d.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23D4E4ED%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%238DA8C0%22 font-family=%22sans-serif%22 font-size=%2216%22%3E${d.name}%3C/text%3E%3C/svg%3E'">
+            <div class="dest-card-overlay"></div>
+            ${badgeHtml}
+            <div class="dest-card-info">
+              <h3 class="dest-card-name">${d.name}</h3>
+              <span class="dest-card-location">📍 ${d.location || ''}</span>
+            </div>
+          </div>
+          <div class="dest-card-body">
+            <p class="dest-card-desc">${d.description || ''}</p>
+            <div class="dest-card-tags">${tagsHtml}</div>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+    // 重新触发 reveal 动画
+    setTimeout(() => {
+      container.querySelectorAll('.reveal').forEach(el => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+          });
+        }, { threshold: 0.08 });
+        observer.observe(el);
+      });
+    }, 100);
+  }
+
+  // 渲染行程
+  function renderTours(data) {
+    const container = document.getElementById('toursGrid');
+    if (!container) return;
+    const items = data.tours || [];
+    if (items.length === 0) {
+      container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:60px 0;color:var(--color-text-muted);text-align:center;">暂无行程数据</div>`;
+      return;
+    }
+    let html = '';
+    items.forEach((t, idx) => {
+      const delay = idx % 3 === 0 ? '' : (idx % 3 === 1 ? ' reveal-delay-1' : ' reveal-delay-2');
+      const stars = '★'.repeat(Math.floor(t.rating || 0)) + (t.rating % 1 >= 0.5 ? '★' : '');
+      const inclusionsHtml = (t.inclusions || []).map(i => `<span>${i}</span>`).join('');
+      html += `
+        <div class="tour-card reveal${delay}">
+          <div class="tour-card-image">
+            <img src="${t.image || ''}" alt="${t.title}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23D4E4ED%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%238DA8C0%22 font-family=%22sans-serif%22 font-size=%2216%22%3E${t.title}%3C/text%3E%3C/svg%3E'">
+            <div class="tour-card-price">¥<span>${(t.price || 0).toLocaleString()}</span>/人</div>
+            <div class="tour-card-duration">📅 ${t.duration || ''}</div>
+          </div>
+          <div class="tour-card-body">
+            <div class="tour-card-rating">
+              <span class="stars">${stars}</span>
+              <span class="rating-num">${t.rating || 0} (${t.reviews || 0})</span>
+            </div>
+            <h3 class="tour-card-title">${t.title}</h3>
+            <p class="tour-card-desc">${t.description || ''}</p>
+            <div class="tour-inclusions">${inclusionsHtml}</div>
+            <div class="tour-card-footer">
+              <span class="tour-card-rating" style="margin:0">⭐ ${t.badge || '精选'}</span>
+              <a href="#" class="btn btn-primary" data-i18n="btn_detail">查看详情</a>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+    setTimeout(() => {
+      container.querySelectorAll('.reveal').forEach(el => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+          });
+        }, { threshold: 0.08 });
+        observer.observe(el);
+      });
+    }, 100);
+  }
+
+  // 渲染住宿
+  function renderAccommodations(data) {
+    const container = document.getElementById('accommGrid');
+    if (!container) return;
+    const items = data.accommodations || [];
+    if (items.length === 0) {
+      container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:60px 0;color:var(--color-text-muted);text-align:center;">暂无住宿数据</div>`;
+      return;
+    }
+    let html = '';
+    items.forEach((a, idx) => {
+      const delay = idx % 2 === 0 ? '' : ' reveal-delay-1';
+      const amenitiesHtml = (a.amenities || []).map(am => `<span class="amenity">${am}</span>`).join('');
+      html += `
+        <div class="accomm-card reveal${delay}">
+          <div class="accomm-image">
+            <img src="${a.image || ''}" alt="${a.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23D4E4ED%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%238DA8C0%22 font-family=%22sans-serif%22 font-size=%2216%22%3E${a.name}%3C/text%3E%3C/svg%3E'">
+          </div>
+          <div class="accomm-body">
+            <span class="accomm-type">${a.type || ''}</span>
+            <h3 class="accomm-name">${a.name}</h3>
+            <span class="accomm-location">📍 ${a.location || ''}</span>
+            <p class="accomm-desc">${a.description || ''}</p>
+            <div class="accomm-amenities">${amenitiesHtml}</div>
+            <div class="accomm-footer">
+              <span class="accomm-price">¥${(a.price || 0).toLocaleString()} <small>/晚起</small></span>
+              <a href="#" class="btn btn-outline-dark" data-i18n="btn_book">预订</a>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+    setTimeout(() => {
+      container.querySelectorAll('.reveal').forEach(el => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+          });
+        }, { threshold: 0.08 });
+        observer.observe(el);
+      });
+    }, 100);
+  }
+
+  // 渲染图集
+  function renderGallery(data) {
+    const container = document.getElementById('galleryGrid');
+    if (!container) return;
+    const items = data.gallery || [];
+    if (items.length === 0) {
+      container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:60px 0;color:var(--color-text-muted);text-align:center;">暂无图集数据</div>`;
+      return;
+    }
+    let html = '';
+    items.forEach((g, idx) => {
+      const isFirst = idx === 0;
+      const isFifth = idx === 4;
+      let spanClass = '';
+      if (isFirst) spanClass = ' style="grid-column:span 2;grid-row:span 2;"';
+      else if (isFifth) spanClass = ' style="grid-column:span 2;grid-row:span 1;"';
+      const delay = idx % 3 === 0 ? '' : (idx % 3 === 1 ? ' reveal-delay-1' : ' reveal-delay-2');
+      html += `
+        <div class="gallery-item reveal${delay}"${spanClass}>
+          <img src="${g.image || ''}" alt="${g.title}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23D4E4ED%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%238DA8C0%22 font-family=%22sans-serif%22 font-size=%2216%22%3E${g.title}%3C/text%3E%3C/svg%3E'">
+          <div class="gallery-item-overlay"><span>${g.title}</span></div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+    setTimeout(() => {
+      container.querySelectorAll('.reveal').forEach(el => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+          });
+        }, { threshold: 0.08 });
+        observer.observe(el);
+      });
+    }, 100);
+  }
+
+  // 全量刷新
+  function refreshAllContent() {
+    const data = loadBusinessData();
+    renderDestinations(data);
+    renderTours(data);
+    renderAccommodations(data);
+    renderGallery(data);
+  }
 
   // ============================================
   // LANGUAGE SWITCH
@@ -243,21 +484,15 @@
   // ============================================
   // HEADER SCROLL EFFECT
   // ============================================
-  let lastScroll = 0;
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
-    if (scrollY > 80) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-    lastScroll = scrollY;
+    header.classList.toggle('scrolled', scrollY > 80);
   });
 
   // ============================================
-  // SCROLL REVEAL — Intersection Observer
+  // SCROLL REVEAL — Intersection Observer (for static elements)
   // ============================================
-  const revealEls = document.querySelectorAll('.reveal');
+  const revealEls = document.querySelectorAll('.reveal:not(.dest-card):not(.tour-card):not(.accomm-card):not(.gallery-item)');
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -288,5 +523,16 @@
   // INIT
   // ============================================
   setLang('zh');
+  refreshAllContent();
+
+  // 监听 storage 变化（当后台修改数据时，自动刷新）
+  window.addEventListener('storage', function(e) {
+    if (e.key === DB_KEY) {
+      refreshAllContent();
+    }
+  });
+
+  // 暴露刷新方法到全局，便于调试
+  window.refreshCoastData = refreshAllContent;
 
 })();

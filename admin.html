@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>碧蓝海岸 · 后台管理（增强版）</title>
+    <style>
+        /* ===== 与原版一致，此处省略（保持原有样式） ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            background: #EBF5FB;
+            color: #0F2B4B;
+        }
+        .hidden {
+            display: none !important;
+        }
+        /* 登录页 */
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0F2B4B, #1A5276);
+            padding: 24px;
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px 32px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 56px rgba(0, 0, 0, 0.25);
+        }
+        .login-box .logo {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0F2B4B;
+            margin-bottom: 8px;
+        }
+        .login-box .subtitle {
+            text-align: center;
+            color: #5D7A9A;
+            margin-bottom: 28px;
+            font-size: 0.9rem;
+        }
+        .login-box .form-group {
+            margin-bottom: 18px;
+        }
+        .login-box label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #D4E4ED;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            background: #fff;
+        }
+        .login-box input:focus {
+            border-color: #5DADE2;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.2);
+        }
+        .login-box .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #E87461;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 6px;
+        }
+        .login-box .btn-login:hover {
+            background: #D45D4A;
+        }
+        .login-box .error-msg {
+            color: #E74C3C;
+            font-size: 0.85rem;
+            text-align: center;
+            min-height: 24px;
+            margin-top: 10px;
+        }
+        .login-box .footer-text {
+            text-align: center;
+            margin-top: 16px;
+            color: #8DA8C0;
+            font-size: 0.8rem;
+        }
+        /* 后台布局 */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            background: #0F2B4B;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            transition: transform 0.3s;
+            z-index: 100;
+        }
+        .sidebar-brand {
+            padding: 18px 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px;
+        }
+        .sidebar-nav .nav-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            padding: 8px 12px 6px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            box-shadow: inset 3px 0 0 #E87461;
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: #E87461;
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 0 8px;
+            border-radius: 10px;
+        }
+        .sidebar-footer {
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+        }
+        .sidebar-footer .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2471A3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+        }
+        .sidebar-footer .user-info .name {
+            color: #fff;
+            font-weight: 500;
+        }
+        .sidebar-footer .user-info .role {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.7rem;
+        }
+        .sidebar-footer .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: auto;
+        }
+        .main-content {
+            margin-left: 220px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .topbar {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 12px 24px;
+            border-bottom: 1px solid #D4E4ED;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .topbar .page-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        .topbar .page-title span {
+            color: #5D7A9A;
+            font-size: 0.85rem;
+            font-weight: 400;
+            margin-left: 6px;
+        }
+        .topbar .menu-toggle-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .page-content {
+            padding: 24px;
+            flex: 1;
+        }
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px 24px;
+            border: 1px solid #D4E4ED;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .stat-card .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #8DA8C0;
+            font-weight: 600;
+        }
+        .stat-card .stat-number {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #0F2B4B;
+        }
+        .stat-card .stat-icon {
+            float: right;
+            font-size: 1.8rem;
+            opacity: 0.2;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .dashboard-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid #D4E4ED;
+        }
+        .dashboard-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .recent-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        .recent-item .recent-icon {
+            width: 32px;
+            height: 32px;
+            background: #EBF5FB;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .recent-item .recent-info {
+            flex: 1;
+        }
+        .recent-item .recent-info .title {
+            font-weight: 500;
+        }
+        .recent-item .recent-info .meta {
+            font-size: 0.75rem;
+            color: #8DA8C0;
+        }
+        .recent-status {
+            font-size: 0.65rem;
+            padding: 0 10px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .recent-status.pending {
+            background: #FEF9E7;
+            color: #B7950B;
+        }
+        .recent-status.replied {
+            background: #E8F8F5;
+            color: #1A7A5A;
+        }
+        /* 表格 */
+        .table-container {
+            background: #fff;
+            border-radius: 14px;
+            border: 1px solid #D4E4ED;
+            overflow: hidden;
+        }
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-bottom: 1px solid #D4E4ED;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .table-toolbar .search-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBF5FB;
+            border-radius: 8px;
+            padding: 4px 12px;
+        }
+        .table-toolbar .search-box input {
+            border: none;
+            background: transparent;
+            padding: 6px 4px;
+            outline: none;
+            font-size: 0.85rem;
+        }
+        .table-toolbar .btn-add {
+            background: #E87461;
+            color: #fff;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        .table-toolbar .btn-add:hover {
+            background: #D45D4A;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        table th {
+            text-align: left;
+            padding: 10px 14px;
+            background: #EBF5FB;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #5D7A9A;
+            border-bottom: 1px solid #D4E4ED;
+        }
+        table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f4f8;
+            vertical-align: middle;
+        }
+        table .thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #EBF5FB;
+        }
+        table .actions button {
+            border: none;
+            background: none;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        table .actions .btn-edit {
+            color: #2471A3;
+        }
+        table .actions .btn-delete {
+            color: #E74C3C;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0 10px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .status-badge.active {
+            background: #E8F8F5;
+            color: #1A7A5A;
+        }
+        .status-badge.draft {
+            background: #F4F6F7;
+            color: #7F8C8D;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8DA8C0;
+        }
+        .empty-state i {
+            font-size: 2.5rem;
+            opacity: 0.2;
+            display: block;
+            margin-bottom: 8px;
+        }
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            transform: scale(0.95);
+            transition: 0.3s;
+        }
+        .modal-overlay.open .modal {
+            transform: scale(1);
+        }
+        .modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal .modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+        .modal .modal-header .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #8DA8C0;
+        }
+        .modal .form-group {
+            margin-bottom: 16px;
+        }
+        .modal .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+        .modal .form-group input,
+        .modal .form-group textarea,
+        .modal .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1.5px solid #D4E4ED;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .modal .form-group textarea {
+            min-height: 70px;
+        }
+        .modal .form-group .image-preview {
+            margin-top: 6px;
+        }
+        .modal .form-group .image-preview img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 6px;
+            border: 1px solid #D4E4ED;
+            object-fit: contain;
+        }
+        .modal .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #D4E4ED;
+        }
+        .modal .form-actions .btn-cancel {
+            padding: 6px 18px;
+            border: 1px solid #D4E4ED;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .modal .form-actions .btn-submit {
+            padding: 6px 20px;
+            background: #E87461;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .modal .form-actions .btn-submit:hover {
+            background: #D45D4A;
+        }
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .toast {
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.3s;
+            min-width: 200px;
+        }
+        .toast.success {
+            background: #27AE60;
+        }
+        .toast.error {
+            background: #E74C3C;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .topbar .menu-toggle-btn {
+                display: block;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .table-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 登录页 -->
+    <div class="login-page" id="loginPage">
+        <div class="login-box">
+            <div class="logo">🌊 碧蓝海岸</div>
+            <p class="subtitle">Azure Coast · 后台管理（增强版）</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="loginUser" value="admin" required />
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="loginPass" value="123456" required />
+                </div>
+                <button type="submit" class="btn-login">登 录</button>
+                <div class="error-msg" id="loginError"></div>
+            </form>
+            <div class="footer-text">默认账号 admin / 密码 123456</div>
+        </div>
+    </div>
+
+    <!-- 后台布局 -->
+    <div class="admin-layout hidden" id="adminLayout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">🌊 碧蓝海岸 <span style="font-weight:400;font-size:0.7rem;opacity:0.6;">后台</span></div>
+            <nav class="sidebar-nav">
+                <div class="nav-label">概览</div>
+                <a class="active" data-page="dashboard">📊 仪表板</a>
+                <div class="nav-label">内容管理</div>
+                <a data-page="destinations">🏝️ 目的地</a>
+                <a data-page="attractions">🏖️ 景点</a>
+                <a data-page="tours">🚢 行程</a>
+                <a data-page="accommodations">🏨 住宿</a>
+                <a data-page="gallery">🖼️ 图集</a>
+                <div class="nav-label">互动</div>
+                <a data-page="messages">💬 留言 <span class="badge" id="msgBadge">0</span></a>
+                <div class="nav-label">系统</div>
+                <a data-page="users">👥 用户管理</a>
+                <a data-page="settings">⚙️ 系统设置</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div class="user-info">
+                    <div class="name" id="userName">管理员</div>
+                    <div class="role">超级管理员</div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">🚪</button>
+            </div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <button class="menu-toggle-btn" onclick="toggleSidebar()">☰</button>
+                    <div class="page-title" id="pageTitle">仪表板 <span>数据概览</span></div>
+                </div>
+                <div><span id="topbarTime"></span></div>
+            </header>
+            <div class="page-content" id="pageContent"></div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">标题</h2>
+                <button class="close-btn" onclick="closeModal()">✕</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ============================================================
+        // 完整增强版后台脚本 - 包含所有模块 + 图片上传 + 景点管理
+        // ============================================================
+        (function() {
+            'use strict';
+
+            const DB_KEY = 'azurecoast_admin_data';
+
+            function getDefaultData() {
+                return {
+                    users: [{ id: 'u1', username: 'admin', password: '123456', role: 'super', createdAt: Date.now() }],
+                    destinations: [{
+                        id: 'd1',
+                        name: '三亚 · Sanya',
+                        location: '中国海南',
+                        description: '中国最美的热带海滨城市，拥有洁白细腻的沙滩和清澈温暖的海水。亚龙湾、海棠湾等顶级海湾等你探索。',
+                        image: 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=400&q=80',
+                        tags: ['海滩', '潜水', '度假村'],
+                        badge: '热门',
+                        createdAt: Date.now()
+                    }, {
+                        id: 'd2',
+                        name: '巴厘岛 · Bali',
+                        location: '印度尼西亚',
+                        description: '众神之岛，融合了绝美的海滩、梯田与文化遗迹。乌布的艺术气息和库塔的冲浪文化同样迷人。',
+                        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80',
+                        tags: ['文化', '冲浪', '瑜伽'],
+                        badge: '',
+                        createdAt: Date.now()
+                    }, {
+                        id: 'd3',
+                        name: '圣托里尼 · Santorini',
+                        location: '希腊',
+                        description: '蓝白相间的梦幻岛屿，爱琴海上最璀璨的明珠。标志性的蓝顶教堂和壮丽的火山口日落令人陶醉。',
+                        image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&q=80',
+                        tags: ['日落', '浪漫', '美酒'],
+                        badge: '',
+                        createdAt: Date.now()
+                    }, {
+                        id: 'd4',
+                        name: '马尔代夫 · Maldives',
+                        location: '马尔代夫',
+                        description: '印度洋上的人间天堂，环礁环绕的碧蓝泻湖与奢华水上别墅。全球顶级潜水胜地，与鲸鲨同游的终极梦想。',
+                        image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=80',
+                        tags: ['水上屋', '浮潜', '水疗'],
+                        badge: '奢华',
+                        createdAt: Date.now()
+                    }],
+                    attractions: [{
+                        id: 'at1',
+                        name: '亚龙湾',
+                        location: '三亚',
+                        description: '享有“天下第一湾”的美誉，沙质细腻，海水清澈，是游泳和潜水的绝佳去处。',
+                        image: 'https://images.unsplash.com/photo-1580060839132-ae7b2e4c5d9a?w=400&q=80',
+                        tags: ['海滩', '潜水'],
+                        createdAt: Date.now()
+                    }, {
+                        id: 'at2',
+                        name: '乌布皇宫',
+                        location: '巴厘岛',
+                        description: '位于乌布中心，是巴厘岛最著名的历史建筑之一，夜晚有传统舞蹈表演。',
+                        image: 'https://images.unsplash.com/photo-1580146542308-1f1b3d3c2a0f?w=400&q=80',
+                        tags: ['文化', '历史'],
+                        createdAt: Date.now()
+                    }],
+                    tours: [{
+                        id: 't1',
+                        title: '马尔代夫 · 梦幻环礁之旅',
+                        description: '入住顶级水上别墅，与海龟和蝠鲼共游，在私人沙滩上享受烛光晚餐。',
+                        price: 12800,
+                        duration: '7天5晚',
+                        rating: 4.9,
+                        reviews: 328,
+                        inclusions: ['含机票', '含住宿', '含餐饮'],
+                        image: 'https://images.unsplash.com/photo-1502851211256-709401b51ea7?w=400&q=80',
+                        badge: '超值推荐',
+                        createdAt: Date.now()
+                    }, {
+                        id: 't2',
+                        title: '希腊 · 爱琴海浪漫之旅',
+                        description: '漫步蓝白小镇，在伊亚欣赏世界最美日落，品味地道的希腊美食与美酒。',
+                        price: 9600,
+                        duration: '8天6晚',
+                        rating: 4.8,
+                        reviews: 256,
+                        inclusions: ['含机票', '含住宿', '含邮轮'],
+                        image: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=400&q=80',
+                        badge: '蜜月首选',
+                        createdAt: Date.now()
+                    }, {
+                        id: 't3',
+                        title: '巴厘岛 · 灵性与冲浪之旅',
+                        description: '探访乌布稻田与神庙，体验冲浪课程和传统SPA，感受巴厘岛的文化与自然。',
+                        price: 6800,
+                        duration: '6天5晚',
+                        rating: 4.7,
+                        reviews: 412,
+                        inclusions: ['含机票', '含住宿', '含冲浪课'],
+                        image: 'https://images.unsplash.com/photo-1519046904884-53103b34b1b5?w=400&q=80',
+                        badge: '人气爆款',
+                        createdAt: Date.now()
+                    }],
+                    accommodations: [{
+                        id: 'a1',
+                        name: '碧海蓝天度假村',
+                        location: '三亚 · 亚龙湾',
+                        description: '坐拥私人海滩，每间客房都面朝大海。无边际泳池与热带花园相映成趣，提供世界级的水疗体验。',
+                        type: '奢华度假村',
+                        price: 1880,
+                        amenities: ['无边际泳池', 'SPA', '海景餐厅', '健身中心'],
+                        image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=80',
+                        createdAt: Date.now()
+                    }, {
+                        id: 'a2',
+                        name: '珊瑚海水上别墅',
+                        location: '马尔代夫 · 南环礁',
+                        description: '建在碧蓝泻湖之上的奢华别墅，透明玻璃地板可观赏海底世界。私人甲板直通大海，感受被海洋包围的奇妙。',
+                        type: '水上别墅',
+                        price: 3280,
+                        amenities: ['玻璃地板', '私人游艇', '水上酒吧', '浮潜装备'],
+                        image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&q=80',
+                        createdAt: Date.now()
+                    }],
+                    gallery: [{
+                        id: 'g1',
+                        title: '热带海滩',
+                        image: 'https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=400&q=80',
+                        category: '海滩',
+                        createdAt: Date.now()
+                    }, {
+                        id: 'g2',
+                        title: '海岸日落',
+                        image: 'https://images.unsplash.com/photo-1502780401007-492f44d5cf87?w=400&q=80',
+                        category: '日落',
+                        createdAt: Date.now()
+                    }, {
+                        id: 'g3',
+                        title: '珊瑚秘境',
+                        image: 'https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=400&q=80',
+                        category: '海底',
+                        createdAt: Date.now()
+                    }],
+                    messages: [{
+                        id: 'm1',
+                        name: '张薇',
+                        email: 'zhangwei@email.com',
+                        content: '马尔代夫的行程太棒了！水上别墅和浮潜体验都超乎想象，下次还想再去！',
+                        reply: '感谢您的喜爱！我们很高兴为您服务，期待再次相遇。',
+                        status: 'replied',
+                        createdAt: Date.now() - 86400000 * 2
+                    }, {
+                        id: 'm2',
+                        name: '李明',
+                        email: 'liming@email.com',
+                        content: '请问圣托里尼的行程可以定制吗？我们想增加两天自由活动时间。',
+                        reply: '',
+                        status: 'pending',
+                        createdAt: Date.now() - 86400000
+                    }, {
+                        id: 'm3',
+                        name: '陈浩',
+                        email: 'chenhao@email.com',
+                        content: '巴厘岛的冲浪课程适合零基础吗？需要提前准备什么装备？',
+                        reply: '完全适合零基础！我们提供所有装备，您只需带上泳衣和防晒霜即可。',
+                        status: 'replied',
+                        createdAt: Date.now() - 3600000 * 6
+                    }],
+                    settings: {
+                        siteName: '碧蓝海岸 · Azure Coast Travel',
+                        siteDescription: '探索世界最美的海岸线，发现属于你的旅行故事。',
+                        contactEmail: 'hello@azurecoast.com',
+                        contactPhone: '+86 21 4000 1234',
+                        address: '上海市黄浦区南京东路100号',
+                        footerCopyright: '© 2026 碧蓝海岸 Azure Coast Travel. All rights reserved.'
+                    }
+                };
+            }
+
+            let db = loadData();
+
+            function loadData() {
+                try {
+                    const raw = localStorage.getItem(DB_KEY);
+                    if (raw) {
+                        const data = JSON.parse(raw);
+                        const def = getDefaultData();
+                        // 补全缺失的集合
+                        for (let key in def) {
+                            if (!data[key]) data[key] = def[key];
+                        }
+                        return data;
+                    }
+                } catch (e) { console.warn('Load error', e); }
+                const def = getDefaultData();
+                saveData(def);
+                return def;
+            }
+
+            function saveData(data) {
+                localStorage.setItem(DB_KEY, JSON.stringify(data));
+            }
+
+            function getCollection(name) {
+                if (!db[name]) db[name] = [];
+                return db[name];
+            }
+
+            function saveCollection(name, collection) {
+                db[name] = collection;
+                saveData(db);
+            }
+
+            function genId() {
+                return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+            }
+
+            function formatDate(ts) {
+                const d = new Date(ts);
+                return d.toLocaleDateString('zh-CN') + ' ' + d.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            function truncate(str, len = 50) {
+                return str && str.length > len ? str.slice(0, len) + '…' : str;
+            }
+
+            function toast(msg, type = 'success') {
+                const container = document.getElementById('toastContainer');
+                const el = document.createElement('div');
+                el.className = 'toast ' + type;
+                el.textContent = msg;
+                container.appendChild(el);
+                setTimeout(() => { el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 300); }, 3000);
+            }
+
+            // 认证
+            let currentUser = null;
+
+            function checkAuth() {
+                const saved = sessionStorage.getItem('azurecoast_admin_user');
+                if (saved) {
+                    try {
+                        currentUser = JSON.parse(saved);
+                        return true;
+                    } catch (e) {}
+                }
+                return false;
+            }
+
+            function initLogin() {
+                document.getElementById('loginForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const username = document.getElementById('loginUser').value.trim();
+                    const password = document.getElementById('loginPass').value.trim();
+                    const errorEl = document.getElementById('loginError');
+                    const users = getCollection('users');
+                    const user = users.find(u => u.username === username && u.password === password);
+                    if (user) {
+                        currentUser = { id: user.id, username: user.username, role: user.role };
+                        sessionStorage.setItem('azurecoast_admin_user', JSON.stringify(currentUser));
+                        errorEl.textContent = '';
+                        document.getElementById('loginPage').classList.add('hidden');
+                        document.getElementById('adminLayout').classList.remove('hidden');
+                        initAdmin();
+                        toast('登录成功！');
+                    } else {
+                        errorEl.textContent = '用户名或密码错误。';
+                    }
+                });
+            }
+
+            window.handleLogout = function() {
+                sessionStorage.removeItem('azurecoast_admin_user');
+                currentUser = null;
+                document.getElementById('adminLayout').classList.add('hidden');
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('loginError').textContent = '';
+                toast('已退出');
+            };
+
+            // ============================================================
+            // 导航系统
+            // ============================================================
+            let currentPage = 'dashboard';
+            const pageTitles = {
+                dashboard: '仪表板',
+                destinations: '目的地管理',
+                attractions: '景点管理',
+                tours: '行程管理',
+                accommodations: '住宿管理',
+                gallery: '图集管理',
+                messages: '留言管理',
+                users: '用户管理',
+                settings: '系统设置'
+            };
+
+            window.navigate = function(page) {
+                currentPage = page;
+                document.querySelectorAll('.sidebar-nav a').forEach(a => {
+                    a.classList.toggle('active', a.dataset.page === page);
+                });
+                document.getElementById('pageTitle').innerHTML = pageTitles[page] + ' <span>' + (page === 'dashboard' ?
+                    '数据概览' : '管理') + '</span>';
+                renderPage(page);
+                if (window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            };
+
+            function renderPage(page) {
+                const container = document.getElementById('pageContent');
+                switch (page) {
+                    case 'dashboard':
+                        renderDashboard(container);
+                        break;
+                    case 'destinations':
+                        renderDestinations(container);
+                        break;
+                    case 'attractions':
+                        renderAttractions(container);
+                        break;
+                    case 'tours':
+                        renderTours(container);
+                        break;
+                    case 'accommodations':
+                        renderAccommodations(container);
+                        break;
+                    case 'gallery':
+                        renderGallery(container);
+                        break;
+                    case 'messages':
+                        renderMessages(container);
+                        break;
+                    case 'users':
+                        renderUsers(container);
+                        break;
+                    case 'settings':
+                        renderSettings(container);
+                        break;
+                    default:
+                        container.innerHTML = '<p>页面建设中</p>';
+                }
+                updateBadge();
+            }
+
+            // ============================================================
+            // 仪表板
+            // ============================================================
+            function renderDashboard(container) {
+                const dests = getCollection('destinations');
+                const attrs = getCollection('attractions');
+                const tours = getCollection('tours');
+                const accs = getCollection('accommodations');
+                const gallery = getCollection('gallery');
+                const msgs = getCollection('messages');
+                const pendingMsgs = msgs.filter(m => m.status === 'pending');
+                const recentMsgs = [...msgs].sort((a, b) => b.createdAt - a.createdAt).slice(0, 5);
+
+                container.innerHTML = `
+                    <div class="stats-grid">
+                        <div class="stat-card"><span class="stat-label">目的地</span><span class="stat-number">${dests.length}</span><span class="stat-icon">🏝️</span></div>
+                        <div class="stat-card"><span class="stat-label">景点</span><span class="stat-number">${attrs.length}</span><span class="stat-icon">🏖️</span></div>
+                        <div class="stat-card"><span class="stat-label">行程</span><span class="stat-number">${tours.length}</span><span class="stat-icon">🚢</span></div>
+                        <div class="stat-card"><span class="stat-label">住宿</span><span class="stat-number">${accs.length}</span><span class="stat-icon">🏨</span></div>
+                    </div>
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header"><span>📬 最新留言</span><a href="#" onclick="navigate('messages');return false;">查看全部 →</a></div>
+                            ${recentMsgs.length === 0 ? '<div class="empty-state">暂无留言</div>' :
+                            recentMsgs.map(m => `
+                                <div class="recent-item">
+                                    <div class="recent-icon">👤</div>
+                                    <div class="recent-info">
+                                        <div class="title">${truncate(m.content, 30)}</div>
+                                        <div class="meta">${m.name} · ${formatDate(m.createdAt)}</div>
+                                    </div>
+                                    <span class="recent-status ${m.status === 'replied' ? 'replied' : 'pending'}">${m.status === 'replied' ? '已回复' : '待处理'}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header"><span>📊 快速统计</span></div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                                <div style="background:#EBF5FB;padding:12px;border-radius:10px;text-align:center;">
+                                    <div style="font-size:1.4rem;font-weight:600;">${dests.length}</div>
+                                    <div style="font-size:0.7rem;color:#5D7A9A;">目的地</div>
+                                </div>
+                                <div style="background:#EBF5FB;padding:12px;border-radius:10px;text-align:center;">
+                                    <div style="font-size:1.4rem;font-weight:600;">${attrs.length}</div>
+                                    <div style="font-size:0.7rem;color:#5D7A9A;">景点</div>
+                                </div>
+                                <div style="background:#EBF5FB;padding:12px;border-radius:10px;text-align:center;">
+                                    <div style="font-size:1.4rem;font-weight:600;">${pendingMsgs.length}</div>
+                                    <div style="font-size:0.7rem;color:#5D7A9A;">待回复</div>
+                                </div>
+                                <div style="background:#EBF5FB;padding:12px;border-radius:10px;text-align:center;">
+                                    <div style="font-size:1.4rem;font-weight:600;">${gallery.length}</div>
+                                    <div style="font-size:0.7rem;color:#5D7A9A;">图集</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ============================================================
+            // 通用图片上传处理（返回 base64 或原值）
+            // ============================================================
+            function handleImageUpload(file) {
+                return new Promise((resolve) => {
+                    if (!file) return resolve('');
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = () => resolve('');
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // ============================================================
+            // 渲染：目的地
+            // ============================================================
+            function renderDestinations(container) {
+                const items = getCollection('destinations');
+                const searchVal = document.getElementById('searchDest') ? document.getElementById('searchDest').value
+                .toLowerCase() : '';
+                const filtered = items.filter(d =>
+                    d.name.toLowerCase().includes(searchVal) ||
+                    d.location.toLowerCase().includes(searchVal) ||
+                    (d.tags && d.tags.some(t => t.toLowerCase().includes(searchVal)))
+                );
+
+                let html = `
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <div class="search-box">
+                                <span>🔍</span>
+                                <input type="text" id="searchDest" placeholder="搜索目的地..." oninput="renderDestinations(document.getElementById('pageContent'))" />
+                            </div>
+                            <button class="btn-add" onclick="openDestModal()">＋ 添加目的地</button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead><tr><th>图片</th><th>名称</th><th>位置</th><th>标签</th><th>徽章</th><th style="width:120px;">操作</th></tr></thead>
+                                <tbody>
+                    `;
+                if (filtered.length === 0) {
+                    html += `<tr><td colspan="6" class="empty-state">暂无数据</td></tr>`;
+                } else {
+                    filtered.forEach(d => {
+                        html += `
+                            <tr>
+                                <td><img src="${d.image || ''}" class="thumb" onerror="this.style.display='none'" /></td>
+                                <td><strong>${d.name}</strong></td>
+                                <td>${d.location || ''}</td>
+                                <td>${(d.tags || []).join('、')}</td>
+                                <td>${d.badge || ''}</td>
+                                <td class="actions">
+                                    <button class="btn-edit" onclick="openDestModal('${d.id}')">✏️</button>
+                                    <button class="btn-delete" onclick="deleteItem('destinations','${d.id}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                html += `</tbody></table></div></div>`;
+                container.innerHTML = html;
+                if (document.getElementById('searchDest')) {
+                    document.getElementById('searchDest').value = searchVal;
+                }
+            }
+
+            window.openDestModal = function(id) {
+                const isEdit = !!id;
+                const item = isEdit ? getCollection('destinations').find(d => d.id === id) : null;
+                openModal(
+                    isEdit ? '编辑目的地' : '添加目的地',
+                    `
+                        <div class="form-group">
+                            <label>名称</label>
+                            <input type="text" id="destName" value="${isEdit ? item.name : ''}" />
+                        </div>
+                        <div class="form-group">
+                            <label>位置</label>
+                            <input type="text" id="destLocation" value="${isEdit ? item.location : ''}" />
+                        </div>
+                        <div class="form-group">
+                            <label>描述</label>
+                            <textarea id="destDesc">${isEdit ? item.description : ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>标签（用逗号分隔）</label>
+                            <input type="text" id="destTags" value="${isEdit ? (item.tags || []).join('、') : ''}" placeholder="如：海滩、潜水" />
+                        </div>
+                        <div class="form-group">
+                            <label>徽章（如：热门、奢华）</label>
+                            <input type="text" id="destBadge" value="${isEdit ? item.badge : ''}" />
+                        </div>
+                        <div class="form-group">
+                            <label>图片</label>
+                            <input type="file" accept="image/*" id="destImageFile" onchange="previewImage(this, 'destImagePreview')" />
+                            <div class="image-preview"><img id="destImagePreview" src="${isEdit && item.image ? item.image : ''}" style="max-width:100%;max-height:150px;${isEdit && item.image ? '' : 'display:none;'}" /></div>
+                            <input type="hidden" id="destImageData" value="${isEdit ? item.image : ''}" />
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-cancel" onclick="closeModal()">取消</button>
+                            <button class="btn-submit" onclick="saveDest('${isEdit ? id : ''}')">保存</button>
+                        </div>
+                    `
+                );
+            };
+
+            window.saveDest = async function(id) {
+                const name = document.getElementById('destName').value.trim();
+                if (!name) { toast('请填写名称', 'error'); return; }
+                const location = document.getElementById('destLocation').value.trim();
+                const description = document.getElementById('destDesc').value.trim();
+                const tags = document.getElementById('destTags').value.split(/[、,，\s]+/).filter(Boolean);
+                const badge = document.getElementById('destBadge').value.trim();
+                const imageFile = document.getElementById('destImageFile').files[0];
+                let image = document.getElementById('destImageData').value;
+                if (imageFile) {
+                    image = await handleImageUpload(imageFile);
+                }
+                const collection = getCollection('destinations');
+                if (id) {
+                    const idx = collection.findIndex(d => d.id === id);
+                    if (idx >= 0) {
+                        collection[idx] = { ...collection[idx], name, location, description, tags, badge, image };
+                    }
+                } else {
+                    collection.push({
+                        id: genId(),
+                        name,
+                        location,
+                        description,
+                        tags,
+                        badge,
+                        image,
+                        createdAt: Date.now()
+                    });
+                }
+                saveCollection('destinations', collection);
+                closeModal();
+                toast('保存成功');
+                renderPage(currentPage);
+            };
+
+            // ============================================================
+            // 渲染：景点（新增模块）
+            // ============================================================
+            function renderAttractions(container) {
+                const items = getCollection('attractions');
+                const searchVal = document.getElementById('searchAttr') ? document.getElementById('searchAttr').value
+                .toLowerCase() : '';
+                const filtered = items.filter(a =>
+                    a.name.toLowerCase().includes(searchVal) ||
+                    a.location.toLowerCase().includes(searchVal) ||
+                    (a.tags && a.tags.some(t => t.toLowerCase().includes(searchVal)))
+                );
+
+                let html = `
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <div class="search-box">
+                                <span>🔍</span>
+                                <input type="text" id="searchAttr" placeholder="搜索景点..." oninput="renderAttractions(document.getElementById('pageContent'))" />
+                            </div>
+                            <button class="btn-add" onclick="openAttrModal()">＋ 添加景点</button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead><tr><th>图片</th><th>名称</th><th>位置</th><th>标签</th><th style="width:120px;">操作</th></tr></thead>
+                                <tbody>
+                    `;
+                if (filtered.length === 0) {
+                    html += `<tr><td colspan="5" class="empty-state">暂无数据</td></tr>`;
+                } else {
+                    filtered.forEach(a => {
+                        html += `
+                            <tr>
+                                <td><img src="${a.image || ''}" class="thumb" onerror="this.style.display='none'" /></td>
+                                <td><strong>${a.name}</strong></td>
+                                <td>${a.location || ''}</td>
+                                <td>${(a.tags || []).join('、')}</td>
+                                <td class="actions">
+                                    <button class="btn-edit" onclick="openAttrModal('${a.id}')">✏️</button>
+                                    <button class="btn-delete" onclick="deleteItem('attractions','${a.id}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                html += `</tbody></table></div></div>`;
+                container.innerHTML = html;
+                if (document.getElementById('searchAttr')) {
+                    document.getElementById('searchAttr').value = searchVal;
+                }
+            }
+
+            window.openAttrModal = function(id) {
+                const isEdit = !!id;
+                const item = isEdit ? getCollection('attractions').find(a => a.id === id) : null;
+                openModal(
+                    isEdit ? '编辑景点' : '添加景点',
+                    `
+                        <div class="form-group">
+                            <label>名称</label>
+                            <input type="text" id="attrName" value="${isEdit ? item.name : ''}" />
+                        </div>
+                        <div class="form-group">
+                            <label>位置</label>
+                            <input type="text" id="attrLocation" value="${isEdit ? item.location : ''}" />
+                        </div>
+                        <div class="form-group">
+                            <label>描述</label>
+                            <textarea id="attrDesc">${isEdit ? item.description : ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>标签（用逗号分隔）</label>
+                            <input type="text" id="attrTags" value="${isEdit ? (item.tags || []).join('、') : ''}" placeholder="如：海滩、文化" />
+                        </div>
+                        <div class="form-group">
+                            <label>图片</label>
+                            <input type="file" accept="image/*" id="attrImageFile" onchange="previewImage(this, 'attrImagePreview')" />
+                            <div class="image-preview"><img id="attrImagePreview" src="${isEdit && item.image ? item.image : ''}" style="max-width:100%;max-height:150px;${isEdit && item.image ? '' : 'display:none;'}" /></div>
+                            <input type="hidden" id="attrImageData" value="${isEdit ? item.image : ''}" />
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-cancel" onclick="closeModal()">取消</button>
+                            <button class="btn-submit" onclick="saveAttr('${isEdit ? id : ''}')">保存</button>
+                        </div>
+                    `
+                );
+            };
+
+            window.saveAttr = async function(id) {
+                const name = document.getElementById('attrName').value.trim();
+                if (!name) { toast('请填写名称', 'error'); return; }
+                const location = document.getElementById('attrLocation').value.trim();
+                const description = document.getElementById('attrDesc').value.trim();
+                const tags = document.getElementById('attrTags').value.split(/[、,，\s]+/).filter(Boolean);
+                const imageFile = document.getElementById('attrImageFile').files[0];
+                let image = document.getElementById('attrImageData').value;
+                if (imageFile) {
+                    image = await handleImageUpload(imageFile);
+                }
+                const collection = getCollection('attractions');
+                if (id) {
+                    const idx = collection.findIndex(a => a.id === id);
+                    if (idx >= 0) {
+                        collection[idx] = { ...collection[idx], name, location, description, tags, image };
+                    }
+                } else {
+                    collection.push({
+                        id: genId(),
+                        name,
+                        location,
+                        description,
+                        tags,
+                        image,
+                        createdAt: Date.now()
+                    });
+                }
+                saveCollection('attractions', collection);
+                closeModal();
+                toast('保存成功');
+                renderPage(currentPage);
+            };
+
+            // ============================================================
+            // 渲染：行程（与目的地类似，省略详细注释）
+            // ============================================================
+            function renderTours(container) {
+                const items = getCollection('tours');
+                const searchVal = document.getElementById('searchTour') ? document.getElementById('searchTour').value
+                .toLowerCase() : '';
+                const filtered = items.filter(t => t.title.toLowerCase().includes(searchVal));
+
+                let html = `
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <div class="search-box"><span>🔍</span><input type="text" id="searchTour" placeholder="搜索行程..." oninput="renderTours(document.getElementById('pageContent'))" /></div>
+                            <button class="btn-add" onclick="openTourModal()">＋ 添加行程</button>
+                        </div>
+                        <div class="table-wrapper"><table><thead><tr><th>图片</th><th>标题</th><th>价格</th><th>时长</th><th>评分</th><th>操作</th></tr></thead><tbody>
+                `;
+                if (filtered.length === 0) {
+                    html += `<tr><td colspan="6" class="empty-state">暂无数据</td></tr>`;
+                } else {
+                    filtered.forEach(t => {
+                        html += `
+                            <tr>
+                                <td><img src="${t.image || ''}" class="thumb" onerror="this.style.display='none'" /></td>
+                                <td><strong>${t.title}</strong></td>
+                                <td>¥${t.price}</td>
+                                <td>${t.duration}</td>
+                                <td>${t.rating} (${t.reviews})</td>
+                                <td class="actions">
+                                    <button class="btn-edit" onclick="openTourModal('${t.id}')">✏️</button>
+                                    <button class="btn-delete" onclick="deleteItem('tours','${t.id}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                html += `</tbody></table></div></div>`;
+                container.innerHTML = html;
+                if (document.getElementById('searchTour')) {
+                    document.getElementById('searchTour').value = searchVal;
+                }
+            }
+
+            window.openTourModal = function(id) {
+                const isEdit = !!id;
+                const item = isEdit ? getCollection('tours').find(t => t.id === id) : null;
+                openModal(
+                    isEdit ? '编辑行程' : '添加行程',
+                    `
+                        <div class="form-group"><label>标题</label><input type="text" id="tourTitle" value="${isEdit ? item.title : ''}" /></div>
+                        <div class="form-group"><label>描述</label><textarea id="tourDesc">${isEdit ? item.description : ''}</textarea></div>
+                        <div class="form-group"><label>价格</label><input type="number" id="tourPrice" value="${isEdit ? item.price : ''}" /></div>
+                        <div class="form-group"><label>时长</label><input type="text" id="tourDuration" value="${isEdit ? item.duration : ''}" /></div>
+                        <div class="form-group"><label>评分</label><input type="number" step="0.1" id="tourRating" value="${isEdit ? item.rating : ''}" /></div>
+                        <div class="form-group"><label>评论数</label><input type="number" id="tourReviews" value="${isEdit ? item.reviews : ''}" /></div>
+                        <div class="form-group"><label>包含（用逗号分隔）</label><input type="text" id="tourInclusions" value="${isEdit ? (item.inclusions || []).join('、') : ''}" /></div>
+                        <div class="form-group"><label>徽章</label><input type="text" id="tourBadge" value="${isEdit ? item.badge : ''}" /></div>
+                        <div class="form-group">
+                            <label>图片</label>
+                            <input type="file" accept="image/*" id="tourImageFile" onchange="previewImage(this, 'tourImagePreview')" />
+                            <div class="image-preview"><img id="tourImagePreview" src="${isEdit && item.image ? item.image : ''}" style="max-width:100%;max-height:150px;${isEdit && item.image ? '' : 'display:none;'}" /></div>
+                            <input type="hidden" id="tourImageData" value="${isEdit ? item.image : ''}" />
+                        </div>
+                        <div class="form-actions"><button class="btn-cancel" onclick="closeModal()">取消</button><button class="btn-submit" onclick="saveTour('${isEdit ? id : ''}')">保存</button></div>
+                    `
+                );
+            };
+
+            window.saveTour = async function(id) {
+                const title = document.getElementById('tourTitle').value.trim();
+                if (!title) { toast('请填写标题', 'error'); return; }
+                const description = document.getElementById('tourDesc').value.trim();
+                const price = parseFloat(document.getElementById('tourPrice').value) || 0;
+                const duration = document.getElementById('tourDuration').value.trim();
+                const rating = parseFloat(document.getElementById('tourRating').value) || 0;
+                const reviews = parseInt(document.getElementById('tourReviews').value) || 0;
+                const inclusions = document.getElementById('tourInclusions').value.split(/[、,，\s]+/).filter(Boolean);
+                const badge = document.getElementById('tourBadge').value.trim();
+                const imageFile = document.getElementById('tourImageFile').files[0];
+                let image = document.getElementById('tourImageData').value;
+                if (imageFile) image = await handleImageUpload(imageFile);
+                const collection = getCollection('tours');
+                if (id) {
+                    const idx = collection.findIndex(t => t.id === id);
+                    if (idx >= 0) {
+                        collection[idx] = { ...collection[idx], title, description, price, duration, rating, reviews,
+                            inclusions, badge, image };
+                    }
+                } else {
+                    collection.push({ id: genId(), title, description, price, duration, rating, reviews, inclusions,
+                        badge, image, createdAt: Date.now() });
+                }
+                saveCollection('tours', collection);
+                closeModal();
+                toast('保存成功');
+                renderPage(currentPage);
+            };
+
+            // ============================================================
+            // 渲染：住宿（略，结构与上类似）
+            // ============================================================
+            function renderAccommodations(container) {
+                const items = getCollection('accommodations');
+                const searchVal = document.getElementById('searchAcc') ? document.getElementById('searchAcc').value
+                .toLowerCase() : '';
+                const filtered = items.filter(a => a.name.toLowerCase().includes(searchVal) || a.location.toLowerCase()
+                    .includes(searchVal));
+
+                let html = `
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <div class="search-box"><span>🔍</span><input type="text" id="searchAcc" placeholder="搜索住宿..." oninput="renderAccommodations(document.getElementById('pageContent'))" /></div>
+                            <button class="btn-add" onclick="openAccModal()">＋ 添加住宿</button>
+                        </div>
+                        <div class="table-wrapper"><table><thead><tr><th>图片</th><th>名称</th><th>位置</th><th>类型</th><th>价格</th><th>操作</th></tr></thead><tbody>
+                `;
+                if (filtered.length === 0) {
+                    html += `<tr><td colspan="6" class="empty-state">暂无数据</td></tr>`;
+                } else {
+                    filtered.forEach(a => {
+                        html += `
+                            <tr>
+                                <td><img src="${a.image || ''}" class="thumb" onerror="this.style.display='none'" /></td>
+                                <td><strong>${a.name}</strong></td>
+                                <td>${a.location}</td>
+                                <td>${a.type}</td>
+                                <td>¥${a.price}</td>
+                                <td class="actions">
+                                    <button class="btn-edit" onclick="openAccModal('${a.id}')">✏️</button>
+                                    <button class="btn-delete" onclick="deleteItem('accommodations','${a.id}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                html += `</tbody></table></div></div>`;
+                container.innerHTML = html;
+                if (document.getElementById('searchAcc')) {
+                    document.getElementById('searchAcc').value = searchVal;
+                }
+            }
+
+            window.openAccModal = function(id) {
+                const isEdit = !!id;
+                const item = isEdit ? getCollection('accommodations').find(a => a.id === id) : null;
+                openModal(
+                    isEdit ? '编辑住宿' : '添加住宿',
+                    `
+                        <div class="form-group"><label>名称</label><input type="text" id="accName" value="${isEdit ? item.name : ''}" /></div>
+                        <div class="form-group"><label>位置</label><input type="text" id="accLocation" value="${isEdit ? item.location : ''}" /></div>
+                        <div class="form-group"><label>描述</label><textarea id="accDesc">${isEdit ? item.description : ''}</textarea></div>
+                        <div class="form-group"><label>类型</label><input type="text" id="accType" value="${isEdit ? item.type : ''}" /></div>
+                        <div class="form-group"><label>价格（每晚）</label><input type="number" id="accPrice" value="${isEdit ? item.price : ''}" /></div>
+                        <div class="form-group"><label>设施（用逗号分隔）</label><input type="text" id="accAmenities" value="${isEdit ? (item.amenities || []).join('、') : ''}" /></div>
+                        <div class="form-group">
+                            <label>图片</label>
+                            <input type="file" accept="image/*" id="accImageFile" onchange="previewImage(this, 'accImagePreview')" />
+                            <div class="image-preview"><img id="accImagePreview" src="${isEdit && item.image ? item.image : ''}" style="max-width:100%;max-height:150px;${isEdit && item.image ? '' : 'display:none;'}" /></div>
+                            <input type="hidden" id="accImageData" value="${isEdit ? item.image : ''}" />
+                        </div>
+                        <div class="form-actions"><button class="btn-cancel" onclick="closeModal()">取消</button><button class="btn-submit" onclick="saveAcc('${isEdit ? id : ''}')">保存</button></div>
+                    `
+                );
+            };
+
+            window.saveAcc = async function(id) {
+                const name = document.getElementById('accName').value.trim();
+                if (!name) { toast('请填写名称', 'error'); return; }
+                const location = document.getElementById('accLocation').value.trim();
+                const description = document.getElementById('accDesc').value.trim();
+                const type = document.getElementById('accType').value.trim();
+                const price = parseFloat(document.getElementById('accPrice').value) || 0;
+                const amenities = document.getElementById('accAmenities').value.split(/[、,，\s]+/).filter(Boolean);
+                const imageFile = document.getElementById('accImageFile').files[0];
+                let image = document.getElementById('accImageData').value;
+                if (imageFile) image = await handleImageUpload(imageFile);
+                const collection = getCollection('accommodations');
+                if (id) {
+                    const idx = collection.findIndex(a => a.id === id);
+                    if (idx >= 0) {
+                        collection[idx] = { ...collection[idx], name, location, description, type, price, amenities,
+                            image };
+                    }
+                } else {
+                    collection.push({ id: genId(), name, location, description, type, price, amenities, image,
+                        createdAt: Date.now() });
+                }
+                saveCollection('accommodations', collection);
+                closeModal();
+                toast('保存成功');
+                renderPage(currentPage);
+            };
+
+            // ============================================================
+            // 渲染：图集
+            // ============================================================
+            function renderGallery(container) {
+                const items = getCollection('gallery');
+                const searchVal = document.getElementById('searchGal') ? document.getElementById('searchGal').value
+                .toLowerCase() : '';
+                const filtered = items.filter(g => g.title.toLowerCase().includes(searchVal) || g.category.toLowerCase()
+                    .includes(searchVal));
+
+                let html = `
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <div class="search-box"><span>🔍</span><input type="text" id="searchGal" placeholder="搜索图集..." oninput="renderGallery(document.getElementById('pageContent'))" /></div>
+                            <button class="btn-add" onclick="openGalModal()">＋ 添加图片</button>
+                        </div>
+                        <div class="table-wrapper"><table><thead><tr><th>图片</th><th>标题</th><th>分类</th><th>操作</th></tr></thead><tbody>
+                `;
+                if (filtered.length === 0) {
+                    html += `<tr><td colspan="4" class="empty-state">暂无数据</td></tr>`;
+                } else {
+                    filtered.forEach(g => {
+                        html += `
+                            <tr>
+                                <td><img src="${g.image || ''}" class="thumb" onerror="this.style.display='none'" /></td>
+                                <td><strong>${g.title}</strong></td>
+                                <td>${g.category}</td>
+                                <td class="actions">
+                                    <button class="btn-edit" onclick="openGalModal('${g.id}')">✏️</button>
+                                    <button class="btn-delete" onclick="deleteItem('gallery','${g.id}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                html += `</tbody></table></div></div>`;
+                container.innerHTML = html;
+                if (document.getElementById('searchGal')) {
+                    document.getElementById('searchGal').value = searchVal;
+                }
+            }
+
+            window.openGalModal = function(id) {
+                const isEdit = !!id;
+                const item = isEdit ? getCollection('gallery').find(g => g.id === id) : null;
+                openModal(
+                    isEdit ? '编辑图集' : '添加图集',
+                    `
+                        <div class="form-group"><label>标题</label><input type="text" id="galTitle" value="${isEdit ? item.title : ''}" /></div>
+                        <div class="form-group"><label>分类</label><input type="text" id="galCategory" value="${isEdit ? item.category : ''}" /></div>
+                        <div class="form-group">
+                            <label>图片</label>
+                            <input type="file" accept="image/*" id="galImageFile" onchange="previewImage(this, 'galImagePreview')" />
+                            <div class="image-preview"><img id="galImagePreview" src="${isEdit && item.image ? item.image : ''}" style="max-width:100%;max-height:150px;${isEdit && item.image ? '' : 'display:none;'}" /></div>
+                            <input type="hidden" id="galImageData" value="${isEdit ? item.image : ''}" />
+                        </div>
+                        <div class="form-actions"><button class="btn-cancel" onclick="closeModal()">取消</button><button class="btn-submit" onclick="saveGal('${isEdit ? id : ''}')">保存</button></div>
+                    `
+                );
+            };
+
+            window.saveGal = async function(id) {
+                const title = document.getElementById('galTitle').value.trim();
+                if (!title) { toast('请填写标题', 'error'); return; }
+                const category = document.getElementById('galCategory').value.trim();
+                const imageFile = document.getElementById('galImageFile').files[0];
+                let image = document.getElementById('galImageData').value;
+                if (imageFile) image = await handleImageUpload(imageFile);
+                const collection = getCollection('gallery');
+                if (id) {
+                    const idx = collection.findIndex(g => g.id === id);
+                    if (idx >= 0) {
+                        collection[idx] = { ...collection[idx], title, category, image };
+                    }
+                } else {
+                    collection.push({ id: genId(), title, category, image, createdAt: Date.now() });
+                }
+                saveCollection('gallery', collection);
+                closeModal();
+                toast('保存成功');
+                renderPage(currentPage);
+            };
+
+            // ============================================================
+            // 渲染：留言
+            // ============================================================
+            function renderMessages(container) {
+                const items = getCollection('messages');
+                const searchVal = document.getElementById('searchMsg') ? document.getElementById('searchMsg').value
+                .toLowerCase() : '';
+                const filtered = items.filter(m =>
+                    m.name.toLowerCase().includes(searchVal) ||
+                    m.content.toLowerCase().includes(searchVal) ||
+                    m.email.toLowerCase().includes(searchVal)
+                );
+
+                let html = `
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <div class="search-box"><span>🔍</span><input type="text" id="searchMsg" placeholder="搜索留言..." oninput="renderMessages(document.getElementById('pageContent'))" /></div>
+                        </div>
+                        <div class="table-wrapper"><table><thead><tr><th>用户</th><th>内容</th><th>回复</th><th>状态</th><th>时间</th><th>操作</th></tr></thead><tbody>
+                `;
+                if (filtered.length === 0) {
+                    html += `<tr><td colspan="6" class="empty-state">暂无留言</td></tr>`;
+                } else {
+                    filtered.forEach(m => {
+                        html += `
+                            <tr>
+                                <td><strong>${m.name}</strong><br/><small>${m.email}</small></td>
+                                <td>${truncate(m.content, 80)}</td>
+                                <td>${m.reply ? truncate(m.reply, 60) : '-'}</td>
+                                <td><span class="status-badge ${m.status === 'replied' ? 'active' : 'draft'}">${m.status === 'replied' ? '已回复' : '待处理'}</span></td>
+                                <td>${formatDate(m.createdAt)}</td>
+                                <td class="actions">
+                                    <button class="btn-edit" onclick="openMsgModal('${m.id}')">✏️ 回复</button>
+                                    <button class="btn-delete" onclick="deleteItem('messages','${m.id}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                html += `</tbody></table></div></div>`;
+                container.innerHTML = html;
+                if (document.getElementById('searchMsg')) {
+                    document.getElementById('searchMsg').value = searchVal;
+                }
+            }
+
+            window.openMsgModal = function(id) {
+                const item = getCollection('messages').find(m => m.id === id);
+                if (!item) return;
+                openModal(
+                    '回复留言',
+                    `
+                        <div class="form-group"><label>用户</label><input type="text" value="${item.name}" disabled /></div>
+                        <div class="form-group"><label>内容</label><textarea disabled>${item.content}</textarea></div>
+                        <div class="form-group"><label>回复</label><textarea id="msgReply">${item.reply || ''}</textarea></div>
+                        <div class="form-actions">
+                            <button class="btn-cancel" onclick="closeModal()">取消</button>
+                            <button class="btn-submit" onclick="saveMsg('${id}')">保存回复</button>
+                        </div>
+                    `
+                );
+            };
+
+            window.saveMsg = function(id) {
+                const reply = document.getElementById('msgReply').value.trim();
+                const collection = getCollection('messages');
+                const idx = collection.findIndex(m => m.id === id);
+                if (idx >= 0) {
+                    collection[idx].reply = reply;
+                    collection[idx].status = reply ? 'replied' : 'pending';
+                    saveCollection('messages', collection);
+                    closeModal();
+                    toast('回复已保存');
+                    renderPage(currentPage);
+                }
+            };
+
+            // ============================================================
+            // 渲染：用户管理
+            // ============================================================
+            function renderUsers(container) {
+                const items = getCollection('users');
+                let html = `
+                    <div class="table-container">
+                        <div class="table-toolbar">
+                            <button class="btn-add" onclick="openUserModal()">＋ 添加用户</button>
+                        </div>
+                        <div class="table-wrapper"><table><thead><tr><th>用户名</th><th>角色</th><th>创建时间</th><th>操作</th></tr></thead><tbody>
+                `;
+                if (items.length === 0) {
+                    html += `<tr><td colspan="4" class="empty-state">暂无用户</td></tr>`;
+                } else {
+                    items.forEach(u => {
+                        html += `
+                            <tr>
+                                <td><strong>${u.username}</strong></td>
+                                <td>${u.role}</td>
+                                <td>${formatDate(u.createdAt)}</td>
+                                <td class="actions">
+                                    <button class="btn-edit" onclick="openUserModal('${u.id}')">✏️</button>
+                                    <button class="btn-delete" onclick="deleteItem('users','${u.id}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                html += `</tbody></table></div></div>`;
+                container.innerHTML = html;
+            }
+
+            window.openUserModal = function(id) {
+                const isEdit = !!id;
+                const item = isEdit ? getCollection('users').find(u => u.id === id) : null;
+                openModal(
+                    isEdit ? '编辑用户' : '添加用户',
+                    `
+                        <div class="form-group"><label>用户名</label><input type="text" id="userUsername" value="${isEdit ? item.username : ''}" /></div>
+                        <div class="form-group"><label>密码</label><input type="text" id="userPassword" value="${isEdit ? item.password : ''}" placeholder="留空则不修改" /></div>
+                        <div class="form-group"><label>角色</label><input type="text" id="userRole" value="${isEdit ? item.role : 'user'}" /></div>
+                        <div class="form-actions"><button class="btn-cancel" onclick="closeModal()">取消</button><button class="btn-submit" onclick="saveUser('${isEdit ? id : ''}')">保存</button></div>
+                    `
+                );
+            };
+
+            window.saveUser = function(id) {
+                const username = document.getElementById('userUsername').value.trim();
+                if (!username) { toast('请填写用户名', 'error'); return; }
+                const password = document.getElementById('userPassword').value.trim();
+                const role = document.getElementById('userRole').value.trim() || 'user';
+                const collection = getCollection('users');
+                if (id) {
+                    const idx = collection.findIndex(u => u.id === id);
+                    if (idx >= 0) {
+                        if (password) collection[idx].password = password;
+                        collection[idx].username = username;
+                        collection[idx].role = role;
+                    }
+                } else {
+                    if (!password) { toast('请填写密码', 'error'); return; }
+                    collection.push({ id: genId(), username, password, role, createdAt: Date.now() });
+                }
+                saveCollection('users', collection);
+                closeModal();
+                toast('保存成功');
+                renderPage(currentPage);
+            };
+
+            // ============================================================
+            // 渲染：系统设置
+            // ============================================================
+            function renderSettings(container) {
+                const settings = db.settings || {};
+                container.innerHTML = `
+                    <div class="table-container" style="padding:24px;">
+                        <div class="form-group"><label>网站名称</label><input type="text" id="setSiteName" value="${settings.siteName || ''}" style="width:100%;padding:8px 12px;border:1px solid #D4E4ED;border-radius:8px;" /></div>
+                        <div class="form-group"><label>网站描述</label><textarea id="setSiteDesc" style="width:100%;padding:8px 12px;border:1px solid #D4E4ED;border-radius:8px;">${settings.siteDescription || ''}</textarea></div>
+                        <div class="form-group"><label>联系邮箱</label><input type="text" id="setEmail" value="${settings.contactEmail || ''}" style="width:100%;padding:8px 12px;border:1px solid #D4E4ED;border-radius:8px;" /></div>
+                        <div class="form-group"><label>联系电话</label><input type="text" id="setPhone" value="${settings.contactPhone || ''}" style="width:100%;padding:8px 12px;border:1px solid #D4E4ED;border-radius:8px;" /></div>
+                        <div class="form-group"><label>地址</label><input type="text" id="setAddress" value="${settings.address || ''}" style="width:100%;padding:8px 12px;border:1px solid #D4E4ED;border-radius:8px;" /></div>
+                        <div class="form-group"><label>版权信息</label><input type="text" id="setCopyright" value="${settings.footerCopyright || ''}" style="width:100%;padding:8px 12px;border:1px solid #D4E4ED;border-radius:8px;" /></div>
+                        <button class="btn-add" onclick="saveSettings()">保存设置</button>
+                    </div>
+                `;
+            }
+
+            window.saveSettings = function() {
+                db.settings = {
+                    siteName: document.getElementById('setSiteName').value.trim(),
+                    siteDescription: document.getElementById('setSiteDesc').value.trim(),
+                    contactEmail: document.getElementById('setEmail').value.trim(),
+                    contactPhone: document.getElementById('setPhone').value.trim(),
+                    address: document.getElementById('setAddress').value.trim(),
+                    footerCopyright: document.getElementById('setCopyright').value.trim()
+                };
+                saveData(db);
+                toast('设置已保存');
+                renderPage(currentPage);
+            };
+
+            // ============================================================
+            // 通用：删除、图片预览、Modal控制
+            // ============================================================
+            window.deleteItem = function(collection, id) {
+                if (!confirm('确定删除吗？')) return;
+                const items = getCollection(collection);
+                const filtered = items.filter(i => i.id !== id);
+                if (filtered.length === items.length) { toast('未找到', 'error'); return; }
+                saveCollection(collection, filtered);
+                toast('已删除');
+                renderPage(currentPage);
+            };
+
+            window.previewImage = function(input, previewId) {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = document.getElementById(previewId);
+                        img.src = e.target.result;
+                        img.style.display = 'block';
+                        // 同时存入隐藏域
+                        const hidden = document.getElementById(input.id.replace('File', 'Data'));
+                        if (hidden) hidden.value = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            // Modal
+            window.openModal = function(title, bodyHtml) {
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalBody').innerHTML = bodyHtml;
+                document.getElementById('modalOverlay').classList.add('open');
+            };
+
+            window.closeModal = function() {
+                document.getElementById('modalOverlay').classList.remove('open');
+            };
+
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeModal();
+            });
+
+            // ============================================================
+            // 辅助：未读留言徽章
+            // ============================================================
+            function updateBadge() {
+                const msgs = getCollection('messages');
+                const pending = msgs.filter(m => m.status === 'pending').length;
+                const badge = document.getElementById('msgBadge');
+                if (badge) {
+                    badge.textContent = pending;
+                    badge.style.display = pending > 0 ? 'inline' : 'none';
+                }
+            }
+
+            // ============================================================
+            // 侧栏折叠
+            // ============================================================
+            window.toggleSidebar = function() {
+                document.getElementById('sidebar').classList.toggle('open');
+            };
+
+            // ============================================================
+            // 初始化
+            // ============================================================
+            function initAdmin() {
+                document.getElementById('userName').textContent = currentUser ? currentUser.username : '管理员';
+                document.getElementById('userAvatar').textContent = (currentUser ? currentUser.username : 'A')[0]
+                .toUpperCase();
+                updateBadge();
+                navigate('dashboard');
+
+                function updateClock() {
+                    document.getElementById('topbarTime').textContent = new Date().toLocaleString('zh-CN');
+                }
+                updateClock();
+                setInterval(updateClock, 10000);
+
+                document.querySelectorAll('.sidebar-nav a').forEach(a => {
+                    a.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const page = this.dataset.page;
+                        if (page) navigate(page);
+                    });
+                });
+
+                document.addEventListener('click', function(e) {
+                    const sidebar = document.getElementById('sidebar');
+                    const toggleBtn = document.querySelector('.menu-toggle-btn');
+                    if (window.innerWidth <= 768 && sidebar.classList.contains('open') &&
+                        !sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+                        sidebar.classList.remove('open');
+                    }
+                });
+            }
+
+            // ============================================================
+            // 启动
+            // ============================================================
+            if (checkAuth()) {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('adminLayout').classList.remove('hidden');
+                initAdmin();
+            } else {
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('adminLayout').classList.add('hidden');
+            }
+            initLogin();
+
+        })();
+    </script>
+
+</body>
+</html>
